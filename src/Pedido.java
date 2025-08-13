@@ -63,7 +63,7 @@ public class Pedido {
             System.out.println("Atendimento feito por: " + funcionario.getNome());
         }
         System.out.println("Pedido finalizado com sucesso!");
-        System.out.println("Volte sempre " + cliente.getNome() + "!");
+        System.out.println("Volte sempre!");
         System.out.println("---------------------------------------------");
     }
 
