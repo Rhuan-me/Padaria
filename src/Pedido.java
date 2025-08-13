@@ -75,7 +75,7 @@ public class Pedido {
         total = 0;
         boolean isCliente = (this.cliente != null);
         for (ItemEstoque item : itens) {
-            total += item.getPrecoComDesconto(isCliente);
+            total += item.getPrecoComDesconto(isCliente) * item.getQuantidade();
         }
     }
 
@@ -84,7 +84,7 @@ public class Pedido {
      */
     public void imprimirItens() {
         for (ItemEstoque item : itens) {
-            System.out.println(item.getNome() + "   |   R$" + item.getPreco());
+            System.out.println(item.getQuantidade() + "x " + item.getNome() + "   |   R$" + item.getPreco());
         }
     }
 
@@ -102,6 +102,10 @@ public class Pedido {
 
     public void setFuncionario(Funcionario funcionario) {
         this.funcionario = funcionario;
+    }
+
+    public boolean isEmpty() {
+        return itens.isEmpty();
     }
 
 

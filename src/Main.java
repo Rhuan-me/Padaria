@@ -79,12 +79,12 @@ public class Main {
         produtos.add(p4);
         produtos.add(p5);
 
-        estoque.adicionarItem(p1, LocalDate.now(), LocalDate.now().plusDays(5));
-        estoque.adicionarItem(p1, LocalDate.now(), LocalDate.now().plusDays(5));
-        estoque.adicionarItem(p2, LocalDate.now(), LocalDate.now().plusDays(2)); // Próximo ao vencimento
-        estoque.adicionarItem(p3, LocalDate.now(), LocalDate.now().plusDays(1)); // Próximo ao vencimento
-        estoque.adicionarItem(p4, LocalDate.now(), LocalDate.now().plusDays(3));
-        estoque.adicionarItem(p5, LocalDate.now(), LocalDate.now().plusDays(1));
+        estoque.adicionarItem(p1, LocalDate.now(), LocalDate.now().plusDays(5), 8);
+        estoque.adicionarItem(p1, LocalDate.now(), LocalDate.now().plusDays(5), 9);
+        estoque.adicionarItem(p2, LocalDate.now(), LocalDate.now().plusDays(2), 1); // Próximo ao vencimento
+        estoque.adicionarItem(p3, LocalDate.now(), LocalDate.now().plusDays(1), 2); // Próximo ao vencimento
+        estoque.adicionarItem(p4, LocalDate.now(), LocalDate.now().plusDays(3), 3);
+        estoque.adicionarItem(p5, LocalDate.now(), LocalDate.now().plusDays(1), 6);
 
         funcionarios.add(new Funcionario("Fernanda Maria", "019875698732", "47988764689", Funcionario.Cargos.GERENTE));
         funcionarios.add(new Funcionario("Brena Raiara", "21398764590", "47856789098", Funcionario.Cargos.ATENDENTE));
@@ -175,36 +175,63 @@ public class Main {
         }
 
         Pedido pedido = new Pedido();
-        boolean itemEncontrado = false;
 
         System.out.println("\n---- REALIZANDO PEDIDO ----");
         while (true) {
-            estoque.listarItens();
-            System.out.println("Digite o nome do item que deseja comprar: ");
-            String nome = sc.nextLine();
+            estoque.listarItensComIndice();
+            System.out.println("Digite o número do item que deseja comprar (ou 0 para sair): ");
+            int itemIndex = sc.nextInt();
+            sc.nextLine();
 
-            itemEncontrado = false;
-            for (int i = 0; i < estoque.itens.size(); i++) {
-                if (estoque.itens.get(i).getNome().equalsIgnoreCase(nome)) {
-                    pedido.adicionarItem(estoque.itens.get(i));
-                    estoque.itens.remove(i);
-                    itemEncontrado = true;
-                    System.out.println(nome + " - Adicionado ao pedido");
-                    break;
-                }
+            if (itemIndex == 0) {
+                break;
             }
-            if (!itemEncontrado) System.out.println(nome + " - Item não exite");
+
+            if (itemIndex > 0 && itemIndex <= estoque.itens.size()) {
+                ItemEstoque itemEstoque = estoque.itens.get(itemIndex - 1);
+
+                System.out.println("Digite a quantidade que deseja comprar: ");
+                int quantidadeDesejada = sc.nextInt();
+                sc.nextLine();
+
+                if (quantidadeDesejada > 0 && quantidadeDesejada <= itemEstoque.getQuantidade()) {
+                    ItemEstoque itemPedido = new ItemEstoque(
+                            itemEstoque.getProduto(),
+                            itemEstoque.getDataProducao(),
+                            itemEstoque.getDataValidade(),
+                            quantidadeDesejada
+                    );
+                    pedido.adicionarItem(itemPedido);
+
+                    itemEstoque.setQuantidade(itemEstoque.getQuantidade() - quantidadeDesejada);
+                    if (itemEstoque.getQuantidade() == 0) {
+                        estoque.itens.remove(itemEstoque);
+                    }
+
+                    System.out.println(quantidadeDesejada + "x " + itemEstoque.getNome() + " - Adicionado ao pedido");
+                } else {
+                    System.out.println("Quantidade inválida ou indisponível.");
+                }
+            } else {
+                System.out.println("Item não encontrado.");
+            }
 
             if (estoque.itens.isEmpty()) {
                 System.out.println("O estoque está vazio");
                 break;
             }
 
-            System.out.println("Deseja finalizar o pedido? (s/n)");
-            String finalizar = sc.nextLine();
-            if (finalizar.toLowerCase().equals("s")) break;
+            System.out.println("Deseja adicionar outro item? (s/n)");
+            String continuar = sc.nextLine();
+            if (continuar.equalsIgnoreCase("n")) {
+                break;
+            }
         }
 
+        if (pedido.isEmpty()) {
+            System.out.println("Pedido cancelado.");
+            return;
+        }
 
         System.out.println("O cliente tem fidelidade? (s/n)");
         String fidelidade = sc.next();
@@ -295,7 +322,9 @@ public class Main {
             System.out.print("Digite a data de validade (dd/MM/yyyy): ");
             LocalDate dataValidade = LocalDate.parse(sc.nextLine(), formatter);
             LocalDate dataProducao = LocalDate.now();
-            estoque.adicionarItem(produto, dataProducao, dataValidade);
+            System.out.print("Digite a quantidade do produto para adicionar ao estoque: ");
+            int quantidade = sc.nextInt();
+            estoque.adicionarItem(produto, dataProducao, dataValidade, quantidade);
             System.out.println("Item adicionado ao estoque com sucesso!");
         } catch (DateTimeParseException e) {
             System.out.println("Formato de data inválido! Use o formato dd/MM/yyyy.");

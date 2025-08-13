@@ -9,6 +9,7 @@ class ItemEstoque {
     private Produto produto;
     private LocalDate dataProducao;
     private LocalDate dataValidade;
+    private int quantidade;
 
     /**
      * Construtor do ItemEstoque
@@ -17,10 +18,11 @@ class ItemEstoque {
      * @param dataProducao Data de produção do item
      * @param dataValidade Data de validade do item
      */
-    ItemEstoque(Produto produto, LocalDate dataProducao, LocalDate dataValidade) {
+    ItemEstoque(Produto produto, LocalDate dataProducao, LocalDate dataValidade, int quantidade) {
         this.produto = produto;
         this.dataProducao = dataProducao;
         this.dataValidade = dataValidade;
+        this.quantidade = quantidade;
     }
 
     /**
@@ -50,6 +52,12 @@ class ItemEstoque {
         return produto.getPreco();
     }
 
+    public int getQuantidade() {return quantidade;}
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
     /**
      * Retorna o produto
      *
@@ -66,6 +74,10 @@ class ItemEstoque {
      */
     public LocalDate getDataValidade() {
         return dataValidade;
+    }
+
+    public LocalDate getDataProducao() {
+        return dataProducao;
     }
 
     /**

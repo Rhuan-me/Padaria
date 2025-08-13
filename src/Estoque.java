@@ -24,8 +24,8 @@ public class Estoque {
      * @param dataProducao LocalDate - Data da produção do item
      * @param dataValidade LocalDate - Data da validade do item
      */
-    public void adicionarItem(Produto produto, LocalDate dataProducao, LocalDate dataValidade) {
-        ItemEstoque item = new ItemEstoque(produto, dataProducao, dataValidade);
+    public void adicionarItem(Produto produto, LocalDate dataProducao, LocalDate dataValidade, int quantidade) {
+        ItemEstoque item = new ItemEstoque(produto, dataProducao, dataValidade, quantidade);
         itens.add(item);
     }
 
