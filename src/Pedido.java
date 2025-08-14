@@ -47,9 +47,10 @@ public class Pedido {
      * Aplica desconto se houver cliente de fidelidade.
      */
     public void finalizar() {
-        System.out.println("===== Bug's Bakery =====");
+
+        System.out.println("\n================ Bug's Bakery ================");
         System.out.println("Pedido emitido em: " + dataPedido);
-        System.out.println("---------------------------------------------");
+        System.out.println("----------------------------------------------");
 
         if (itens.isEmpty()) {
             System.out.println("O pedido está vazio!");
@@ -63,8 +64,10 @@ public class Pedido {
             System.out.println("Atendimento feito por: " + funcionario.getNome());
         }
         System.out.println("Pedido finalizado com sucesso!");
-        System.out.println("Volte sempre " + cliente.getNome() + "!");
-        System.out.println("---------------------------------------------");
+        String nome = (cliente == null ? "" : cliente.getNome());
+
+        System.out.println("Volte sempre " + nome + "!");
+        System.out.println("----------------------------------------------");
     }
 
     /**

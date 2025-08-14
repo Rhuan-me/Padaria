@@ -52,7 +52,9 @@ class ItemEstoque {
         return produto.getPreco();
     }
 
-    public int getQuantidade() {return quantidade;}
+    public int getQuantidade() {
+        return quantidade;
+    }
 
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
@@ -101,5 +103,11 @@ class ItemEstoque {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String statusVencimento = estaProximoVencimento() ? " [PRÓXIMO AO VENCIMENTO]" : "";
         return produto.toString() + " | Produção: " + dataProducao.format(dtf) + " | Validade: " + dataValidade.format(dtf) + statusVencimento;
+    }
+
+    public String resumo() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String statusVencimento = estaProximoVencimento() ? " [PRÓXIMO AO VENCIMENTO]" : "";
+        return produto.resumo() + " | Quantidade: " + quantidade + " | Produção: " + dataProducao.format(dtf) + " | Validade: " + dataValidade.format(dtf) + statusVencimento;
     }
 }

@@ -169,103 +169,111 @@ public class Main {
      * Caso o cliente tenha fidelidade, associa o pedido ao cliente.
      */
     public static void fazerPedido() {
-        if (estoque.itens.isEmpty()) {
+        if (estoque.estaVazio()) {
             System.out.println("O estoque está vazio");
             return;
         }
 
         Pedido pedido = new Pedido();
 
+        Estoque estoqueTemporario = new Estoque(estoque);
+
         System.out.println("\n---- REALIZANDO PEDIDO ----");
         while (true) {
-            estoque.listarItensComIndice();
-            System.out.println("Digite o número do item que deseja comprar (ou 0 para sair): ");
+            estoqueTemporario.listarItensComIndice();
+            System.out.print("Digite o número do item que deseja comprar (ou 0 para sair): ");
             int itemIndex = sc.nextInt();
+
+            if (itemIndex == 0) break;
             sc.nextLine();
 
-            if (itemIndex == 0) {
-                break;
-            }
-
-            if (itemIndex > 0 && itemIndex <= estoque.itens.size()) {
-                ItemEstoque itemEstoque = estoque.itens.get(itemIndex - 1);
-
-                System.out.println("Digite a quantidade que deseja comprar: ");
-                int quantidadeDesejada = sc.nextInt();
-                sc.nextLine();
-
-                if (quantidadeDesejada > 0 && quantidadeDesejada <= itemEstoque.getQuantidade()) {
-                    ItemEstoque itemPedido = new ItemEstoque(
-                            itemEstoque.getProduto(),
-                            itemEstoque.getDataProducao(),
-                            itemEstoque.getDataValidade(),
-                            quantidadeDesejada
-                    );
-                    pedido.adicionarItem(itemPedido);
-
-                    itemEstoque.setQuantidade(itemEstoque.getQuantidade() - quantidadeDesejada);
-                    if (itemEstoque.getQuantidade() == 0) {
-                        estoque.itens.remove(itemEstoque);
-                    }
-
-                    System.out.println(quantidadeDesejada + "x " + itemEstoque.getNome() + " - Adicionado ao pedido");
-                } else {
-                    System.out.println("Quantidade inválida ou indisponível.");
-                }
-            } else {
+            if (itemIndex < 1 || itemIndex > estoqueTemporario.itens.size()) {
                 System.out.println("Item não encontrado.");
+                continue;
             }
 
-            if (estoque.itens.isEmpty()) {
-                System.out.println("O estoque está vazio");
+            ItemEstoque itemEstoque = estoqueTemporario.itens.get(itemIndex - 1);
+
+
+            System.out.print("Digite a quantidade que deseja comprar: ");
+            int quantidadeDesejada = sc.nextInt();
+            sc.nextLine();
+
+            System.out.println("--------------------------");
+
+            if (quantidadeDesejada <= 0 || quantidadeDesejada > itemEstoque.getQuantidade()) {
+                System.out.println("Quantidade indisponível");
+                continue;
+            }
+
+            ItemEstoque itemPedido = new ItemEstoque(
+                    itemEstoque.getProduto(),
+                    itemEstoque.getDataProducao(),
+                    itemEstoque.getDataValidade(),
+                    quantidadeDesejada
+            );
+            pedido.adicionarItem(itemPedido);
+
+            itemEstoque.setQuantidade(itemEstoque.getQuantidade() - quantidadeDesejada);
+            if (itemEstoque.getQuantidade() == 0) {
+                estoqueTemporario.removerProduto(itemEstoque);
+            }
+            System.out.println(quantidadeDesejada + "x " + itemEstoque.getNome() + " - Adicionado ao pedido");
+
+            System.out.println("--------------------------");
+            if (estoqueTemporario.estaVazio()) {
+                System.out.println("O estoque está vazio.");
                 break;
             }
 
-            System.out.println("Deseja adicionar outro item? (s/n)");
+            System.out.print("Deseja adicionar outro item? (s/n) ");
             String continuar = sc.nextLine();
-            if (continuar.equalsIgnoreCase("n")) {
-                break;
-            }
+            if (continuar.equalsIgnoreCase("n")) break;
+
         }
 
         if (pedido.isEmpty()) {
-            System.out.println("Pedido cancelado.");
+            System.out.println("Pedido vazio.");
             return;
         }
 
-        System.out.println("O cliente tem fidelidade? (s/n)");
+        System.out.print("O cliente tem fidelidade? (s/n) ");
         String fidelidade = sc.next();
         if (fidelidade.equalsIgnoreCase("s")) {
             System.out.print("Digite o CPF: ");
             String cpf = sc.next();
-
             boolean exite = false;
+
+            System.out.println("\n--------------------------");
             for (Cliente cliente : clientes) {
                 if (cliente.getCpf().equals(cpf)) {
                     pedido.setCliente(cliente);
-                    System.out.println("Bem Vindo " + cliente.getNome());
+                    System.out.println("Bem Vindo! " + cliente.getNome());
                     exite = true;
                 }
             }
             if (!exite) System.out.println("CPF não cadastrado");
         }
-
+        sc.nextLine();
+        System.out.println("--------------------------");
         System.out.println("Selecione o funcionario que fez o atendimento: ");
         for (int i = 0; i < funcionarios.size(); i++) {
             System.out.printf("%d - %s (%s) \n", i + 1, funcionarios.get(i).getNome(), funcionarios.get(i).getCargo());
         }
-        System.out.println("Digite o numero do funcionário: ");
+        System.out.println("--------------------------");
+        System.out.print("Digite o número do funcionário: ");
         int funcIndex = sc.nextInt();
         sc.nextLine();
         if (funcIndex > 0 && funcIndex <= funcionarios.size()) {
             pedido.setFuncionario(funcionarios.get(funcIndex - 1));
         } else {
-            System.out.println("Funcionário inválido. Pedido sme funcionário associado.");
+            System.out.println("Funcionário inválido! Pedido sem funcionário associado.");
         }
 
         pedido.finalizar();
 
         pedidos.add(pedido);
+        estoque = estoqueTemporario;
     }
 
     /**
@@ -288,12 +296,14 @@ public class Main {
      */
     public static void removerCliente() {
         System.out.println("---- REMOVER CLIENTE ----");
+
         System.out.print("Digite o CPF do cliente a ser removido: ");
         String cpfParaRemover = sc.nextLine();
 
-        for (Cliente cliente : clientes) {
-            if (cliente.getCpf().equals(cpfParaRemover)) {
-                clientes.remove(cliente);
+        for (int i = 0; i < clientes.size(); i++) {
+            Cliente c = clientes.get(i);
+            if (c.getCpf().equals(cpfParaRemover)) {
+                clientes.remove(i);
                 System.out.println("Cliente removido com sucesso!");
                 return;
             }
@@ -337,7 +347,7 @@ public class Main {
     public static void removerItemEstoque() {
         System.out.println("---- REMOVER ITEM DO ESTOQUE ----");
 
-        if (estoque.itens.isEmpty()) {
+        if (estoque.estaVazio()) {
             System.out.println("Estoque vazio, nada para remover.");
             return;
         }
@@ -410,10 +420,16 @@ public class Main {
         System.out.println("---- EDITAR PREÇO DO PRODUTO ----");
         System.out.print("Digite o código do produto: ");
         int cod = sc.nextInt();
+        Produto p1 = buscarProduto(cod);
+        if (p1 == null) {
+            System.out.println("Produto não encontrado.");
+            return;
+        }
+
         System.out.print("Digite o novo preço do produto: ");
         double precoNovo = sc.nextDouble();
         sc.nextLine();
-        Produto p1 = buscarProduto(cod);
+
         p1.setPreco(precoNovo);
         System.out.println(p1);
     }
@@ -446,6 +462,7 @@ public class Main {
                 System.out.println(produto);
             }
         }
+        System.out.println("---------------------------------------");
     }
 
     /**

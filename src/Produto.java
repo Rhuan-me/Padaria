@@ -63,4 +63,8 @@ public class Produto {
     public String toString() {
         return String.format("Cód: %d | %s | R$%.2f", codigo, nome, preco);
     }
+
+    public String resumo() {
+        return String.format("%s | R$%.2f", nome, preco);
+    }
 }

@@ -18,6 +18,18 @@ public class Estoque {
         this.itens = new ArrayList<>();
     }
 
+    public Estoque(Estoque estoque) {
+        this.itens = new ArrayList<>();
+        for (ItemEstoque item : estoque.itens) {
+            this.itens.add(new ItemEstoque(
+                    item.getProduto(),
+                    item.getDataProducao(),
+                    item.getDataValidade(),
+                    item.getQuantidade()
+            ));
+        }
+    }
+
     /**
      * Adiciona item a lista do estoque
      *
@@ -25,6 +37,13 @@ public class Estoque {
      * @param dataValidade LocalDate - Data da validade do item
      */
     public void adicionarItem(Produto produto, LocalDate dataProducao, LocalDate dataValidade, int quantidade) {
+
+        for (ItemEstoque item : itens) {
+            if (produto == item.getProduto() && dataProducao.equals(item.getDataProducao()) && dataValidade.equals(item.getDataValidade())) {
+                item.setQuantidade(item.getQuantidade() + quantidade);
+                return;
+            }
+        }
         ItemEstoque item = new ItemEstoque(produto, dataProducao, dataValidade, quantidade);
         itens.add(item);
     }
@@ -56,14 +75,15 @@ public class Estoque {
      * Lista todos os itens do estoque, se estiver vazia retorna
      */
     public void listarItens() {
-        System.out.println("---- ITENS NO ESTOQUE ----");
+        System.out.println("\n---- ITENS NO ESTOQUE ----");
         if (itens.isEmpty()) {
             System.out.println("O estoque está vazio.");
             return;
         }
         for (ItemEstoque item : itens) {
-            System.out.println(item);
+            System.out.println(item.resumo());
         }
+        System.out.println("--------------------------");
     }
 
     /**
@@ -77,16 +97,22 @@ public class Estoque {
         }
         System.out.println("\n---- ITENS NO ESTOQUE ----");
         for (int i = 0; i < itens.size(); i++) {
-            System.out.println((i + 1) + ": " + itens.get(i));
+            System.out.println((i + 1) + ": " + itens.get(i).resumo());
         }
+        System.out.println("--------------------------");
     }
 
     public void listarItensValidade() {
-        System.out.println("---- ITENS NO ESTOQUE ORDENADO POR VALIDADE ----");
+        System.out.println("\n---- ITENS NO ESTOQUE ORDENADO POR VALIDADE ----");
         ArrayList<ItemEstoque> ordenados = new ArrayList<>(itens);
         ordenados.sort(Comparator.comparing(ItemEstoque::getDataValidade));
         for (ItemEstoque i : ordenados) {
             System.out.println(i);
         }
+        System.out.println("--------------------------");
+    }
+
+    public boolean estaVazio() {
+        return itens.isEmpty();
     }
 }
