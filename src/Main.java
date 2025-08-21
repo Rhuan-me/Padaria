@@ -31,8 +31,8 @@ public class Main {
             try {
                 System.out.println("\n---- MENU PRINCIPAL ----");
                 System.out.println("1 - Gerir Clientes");
-                System.out.println("2 - Gerir Estoque");
-                System.out.println("3 - Gerir Produtos");
+                System.out.println("2 - Gerir Produtos");
+                System.out.println("3 - Gerir Estoque");
                 System.out.println("4 - Fazer Pedido");
                 System.out.println("5 - Mostrar total de vendas do dia");
                 System.out.println("0 - Sair");
@@ -43,8 +43,8 @@ public class Main {
 
                 switch (opcao) {
                     case 1 -> gerirClientes();
-                    case 2 -> gerirEstoque();
-                    case 3 -> gerirProdutos();
+                    case 2 -> gerirProdutos();
+                    case 3 -> gerirEstoque();
                     case 4 -> fazerPedido();
                     case 5 -> mostrarTotalVendasDoDia();
                     case 0 -> {
