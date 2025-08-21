@@ -98,19 +98,26 @@ public class Main {
      * Permite adicionar, remover e listar clientes.
      */
     public static void gerirClientes() {
-        System.out.println("\n---- GERIR CLIENTES ----");
-        System.out.println("1 - Adicionar cliente");
-        System.out.println("2 - Remover cliente");
-        System.out.println("3 - Listar clientes");
-        System.out.print("Escolha uma opção: ");
-        int opcao = sc.nextInt();
-        sc.nextLine();
 
-        switch (opcao) {
-            case 1 -> adicionarCliente();
-            case 2 -> removerCliente();
-            case 3 -> listarClientes();
-            default -> System.out.println("Opção inválida!");
+        while (true) {
+            System.out.println("\n---- GERIR CLIENTES ----");
+            System.out.println("1 - Adicionar cliente");
+            System.out.println("2 - Remover cliente");
+            System.out.println("3 - Listar clientes");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opção: ");
+            int opcao = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcao) {
+                case 1 -> adicionarCliente();
+                case 2 -> removerCliente();
+                case 3 -> listarClientes();
+                case 0 -> {
+                    return;
+                }
+                default -> System.out.println("Opção inválida!");
+            }
         }
     }
 
@@ -119,22 +126,28 @@ public class Main {
      * Permite adicionar, remover e listar itens, incluindo ordenação por validade.
      */
     public static void gerirEstoque() {
-        System.out.println("\n---- GERIR ESTOQUE ----");
-        System.out.println("1 - Adicionar item ao estoque");
-        System.out.println("2 - Remover item do estoque");
-        System.out.println("3 - Listar itens do estoque");
-        System.out.println("4 - Listar itens do estoque ordenado pela validade");
-        System.out.print("Escolha uma opção: ");
-        int opcao = sc.nextInt();
-        sc.nextLine();
+        while (true) {
+            System.out.println("\n---- GERIR ESTOQUE ----");
+            System.out.println("1 - Adicionar item ao estoque");
+            System.out.println("2 - Remover item do estoque");
+            System.out.println("3 - Listar itens do estoque");
+            System.out.println("4 - Listar itens do estoque ordenado pela validade");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opção: ");
+            int opcao = sc.nextInt();
+            sc.nextLine();
 
-        switch (opcao) {
-            case 1 -> adicionarItemEstoque();
-            case 2 -> removerItemEstoque();
-            case 3 -> estoque.listarItens();
-            case 4 -> estoque.listarItensValidade();
-            default -> System.out.println("Opção inválida!");
+            switch (opcao) {
+                case 1 -> adicionarItemEstoque();
+                case 2 -> removerItemEstoque();
+                case 3 -> estoque.listarItens();
+                case 4 -> estoque.listarItensValidade();
+                case 0 -> {
+                    return;
+                }
+                default -> System.out.println("Opção inválida!");
 
+            }
         }
     }
 
@@ -143,23 +156,30 @@ public class Main {
      * Permite adicionar, remover, listar, buscar e editar produtos.
      */
     public static void gerirProdutos() {
-        System.out.println("\n---- GERIR PRODUTOS ----");
-        System.out.println("1 - Adicionar novo produto");
-        System.out.println("2 - Remover produto");
-        System.out.println("3 - Listar todos os produtos");
-        System.out.println("4 - Buscar produto por código");
-        System.out.println("5 - Editar preço do produto");
-        System.out.print("Escolha uma opção: ");
-        int opcao = sc.nextInt();
-        sc.nextLine();
 
-        switch (opcao) {
-            case 1 -> adicionarProduto();
-            case 2 -> removerProduto();
-            case 3 -> listarProdutos();
-            case 4 -> menuBuscar();
-            case 5 -> editarPrecoProduto();
-            default -> System.out.println("Opção inválida!");
+        while (true) {
+            System.out.println("\n---- GERIR PRODUTOS ----");
+            System.out.println("1 - Adicionar novo produto");
+            System.out.println("2 - Remover produto");
+            System.out.println("3 - Listar todos os produtos");
+            System.out.println("4 - Buscar produto por código");
+            System.out.println("5 - Editar preço do produto");
+            System.out.println("0 - Voltar");
+            System.out.print("Escolha uma opção: ");
+            int opcao = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcao) {
+                case 1 -> adicionarProduto();
+                case 2 -> removerProduto();
+                case 3 -> listarProdutos();
+                case 4 -> menuBuscar();
+                case 5 -> editarPrecoProduto();
+                case 0 -> {
+                    return;
+                }
+                default -> System.out.println("Opção inválida!");
+            }
         }
     }
 
